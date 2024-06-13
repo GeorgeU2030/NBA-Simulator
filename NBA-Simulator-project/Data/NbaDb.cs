@@ -8,5 +8,6 @@ namespace NBA_Simulator_project.Data {
         public DbSet<Team> Teams => Set<Team>();
         public DbSet<Season> Seasons => Set<Season>();
         public DbSet<SeasonTeam> SeasonTeams => Set<SeasonTeam>();
+        public DbSet<Match> Matches => Set<Match>();
     }
 }
