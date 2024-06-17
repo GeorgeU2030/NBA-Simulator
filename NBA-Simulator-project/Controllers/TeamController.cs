@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NBA_Simulator_project.Data;
 using NBA_Simulator_project.Models;
 
@@ -14,7 +15,7 @@ namespace NBA_Simulator_project.Controllers {
             _context = context;
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<ActionResult<Team>> GetTeam(int id) {
             var team = await _context.Teams.FindAsync(id);
 
@@ -24,6 +25,12 @@ namespace NBA_Simulator_project.Controllers {
 
             return team;
         }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Team>>> GetTeams() {
+            return await _context.Teams.ToListAsync();
+        }
+
 
         [HttpPost]
         public async Task<ActionResult<Team>> PostTeam(Team team) {

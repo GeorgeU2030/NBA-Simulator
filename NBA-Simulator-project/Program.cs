@@ -11,11 +11,15 @@ DotEnv.Load();
 
 // Add services to the container.
 
+var url = Environment.GetEnvironmentVariable("BACKEND_URL");
+
+var backendUrl = url ?? "http://localhost:4200";
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(MyAllowSpecificOrigins,
         policy => {
-            policy.WithOrigins("http://localhost:3000")
+            policy.WithOrigins(backendUrl)
                 .AllowAnyHeader()
                 .AllowAnyMethod();
         });
