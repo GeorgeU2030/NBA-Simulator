@@ -16,7 +16,9 @@ namespace NBA_Simulator_project.Controllers {
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Season>> GetSeason(int id) {
-            var season = await _context.Seasons.FindAsync(id);
+            var season = await _context.Seasons
+                .Include(s => s.Teams)
+                .FirstOrDefaultAsync(s => s.SeasonId == id);
 
             if (season == null) {
                 return NotFound();
