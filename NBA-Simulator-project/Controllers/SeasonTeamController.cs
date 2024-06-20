@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NBA_Simulator_project.Data;
 using NBA_Simulator_project.Models;
 
@@ -22,6 +23,20 @@ namespace NBA_Simulator_project.Controllers {
             }
 
             return seasonTeam;
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<SeasonTeam>> PutSeasonTeam(int id, SeasonTeam seasonTeam) {
+            
+            if (id != seasonTeam.SeasonTeamId) {
+                return BadRequest();
+            }
+
+            _context.Entry(seasonTeam).State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
 
         [HttpPost]
