@@ -26,6 +26,17 @@ namespace NBA_Simulator_project.Controllers {
             return team;
         }
 
+        [HttpGet("getByName/{name}")]
+        public async Task<ActionResult<Team>> GetTeam(string name) {
+            var team = await _context.Teams.FirstOrDefaultAsync(t => t.Name == name);
+
+            if (team == null) {
+                return NotFound();
+            }
+
+            return team;
+        }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Team>>> GetTeams() {
             return await _context.Teams.ToListAsync();
