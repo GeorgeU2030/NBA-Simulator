@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using NBA_Simulator_project.Data;
 using NBA_Simulator_project.Models;
 
@@ -15,12 +16,15 @@ namespace NBA_Simulator_project.Controllers {
 
         [HttpGet]
         public async Task<ActionResult<Match>> GetMatch(int id) {
-            var match = await _context.Matches.FindAsync(id);
-
+            var match = await _context.Matches
+                .Include(m => m.HomeTeam) 
+                .Include(m => m.VisitorTeam) 
+                .FirstOrDefaultAsync(m => m.MatchId == id);
+        
             if (match == null) {
                 return NotFound();
             }
-
+        
             return match;
         }
 

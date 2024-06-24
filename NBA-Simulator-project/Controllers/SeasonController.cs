@@ -19,6 +19,9 @@ namespace NBA_Simulator_project.Controllers {
             var season = await _context.Seasons
                 .Include(s => s.Teams)
                 .Include(s => s.Matches)
+                .ThenInclude(m => m.HomeTeam)
+                .Include(s => s.Matches)
+                .ThenInclude(m => m.VisitorTeam)
                 .FirstOrDefaultAsync(s => s.SeasonId == id);
 
             if (season == null) {
@@ -54,6 +57,69 @@ namespace NBA_Simulator_project.Controllers {
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        [HttpPost("{seasonId}/chEast")]
+        public async Task<IActionResult> AddChampionsEast(int seasonId, int championEastId, int semiFinalistEastId)
+        {
+            var season = await _context.Seasons.FindAsync(seasonId);
+            if (season == null)
+            {
+                return NotFound($"Season with ID {seasonId} not found.");
+            }
+
+            var championEastTeam = await _context.Teams.FindAsync(championEastId);
+            if (championEastTeam == null)
+            {
+                return NotFound($"Team with ID {championEastId} not found.");
+            }
+
+            var semiFinalistEastTeam = await _context.Teams.FindAsync(semiFinalistEastId);
+            if (semiFinalistEastTeam == null)
+            {
+                return NotFound($"Team with ID {semiFinalistEastId} not found.");
+            }
+
+            season.ChampionEast = championEastTeam;
+            season.ChampionEastId = championEastId;
+            season.SemiFinalistEast = semiFinalistEastTeam;
+            season.SemiFinalistEastId = semiFinalistEastId;
+
+            await _context.SaveChangesAsync();
+
+            return Ok($"Champion East and SemiFinalist East have been updated for Season {seasonId}.");
+        }
+
+
+        [HttpPost("{seasonId}/chWest")]
+        public async Task<IActionResult> AddChampionsWest(int seasonId, int championWestId, int semiFinalistWestId)
+        {
+            var season = await _context.Seasons.FindAsync(seasonId);
+            if (season == null)
+            {
+                return NotFound($"Season with ID {seasonId} not found.");
+            }
+
+            var championWestTeam = await _context.Teams.FindAsync(championWestId);
+            if (championWestTeam == null)
+            {
+                return NotFound($"Team with ID {championWestId} not found.");
+            }
+
+            var semiFinalistWestTeam = await _context.Teams.FindAsync(semiFinalistWestId);
+            if (semiFinalistWestTeam == null)
+            {
+                return NotFound($"Team with ID {semiFinalistWestId} not found.");
+            }
+
+            season.ChampionWest = championWestTeam;
+            season.ChampionWestId = championWestId;
+            season.SemiFinalistWest = semiFinalistWestTeam;
+            season.SemiFinalistWestId = semiFinalistWestId;
+
+            await _context.SaveChangesAsync();
+
+            return Ok($"Champion East and SemiFinalist West have been updated for Season {seasonId}.");
         }
     }
 }

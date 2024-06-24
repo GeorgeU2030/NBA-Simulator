@@ -9,6 +9,7 @@ namespace NBA_Simulator_project.Models {
         public Team? VisitorTeam { get; set; }
         public int HomeScore { get; set; }
         public int VisitorScore { get; set; }
-
+        // 1: First Round, 2: Semifinals, 3: Conference Finals East,4: Conference Finals West, 5: NBA Finals
+        public int? Phase { get; set; } 
     }
 }
