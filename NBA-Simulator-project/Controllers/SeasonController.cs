@@ -18,10 +18,12 @@ namespace NBA_Simulator_project.Controllers {
         public async Task<ActionResult<Season>> GetSeason(int id) {
             var season = await _context.Seasons
                 .Include(s => s.Teams)
-                .Include(s => s.Matches)
-                .ThenInclude(m => m.HomeTeam)
-                .Include(s => s.Matches)
-                .ThenInclude(m => m.VisitorTeam)
+                .Include(s => s.Series)
+                .ThenInclude(m => m.Matches)
+                .ThenInclude(n => n.HomeTeam)
+                .Include(s => s.Series)
+                .ThenInclude(m => m.Matches)
+                .ThenInclude(n => n.VisitorTeam)
                 .FirstOrDefaultAsync(s => s.SeasonId == id);
 
             if (season == null) {

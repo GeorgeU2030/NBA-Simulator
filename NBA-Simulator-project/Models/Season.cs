@@ -16,6 +16,8 @@ namespace NBA_Simulator_project.Models {
         public int? SemiFinalistWestId { get; set; }
         public Team? SemiFinalistWest { get; set; }
         public ICollection<SeasonTeam> Teams { get; set; } = [];
-        public ICollection<Match> Matches { get; set; } = [];
+        public ICollection<Serie> Series { get; set; } = [];
+
+
     }
 }
