@@ -123,5 +123,36 @@ namespace NBA_Simulator_project.Controllers {
 
             return Ok($"Champion East and SemiFinalist West have been updated for Season {seasonId}.");
         }
+
+        [HttpPost("{seasonId}/champion")]
+        public async Task<IActionResult> AddChampion(int seasonId, int championId, int subChampionId)
+        {
+            var season = await _context.Seasons.FindAsync(seasonId);
+            if (season == null)
+            {
+                return NotFound($"Season with ID {seasonId} not found.");
+            }
+
+            var championTeam = await _context.Teams.FindAsync(championId);
+            if (championTeam == null)
+            {
+                return NotFound($"Team with ID {championId} not found.");
+            }
+
+            var semiFinalistTeam = await _context.Teams.FindAsync(subChampionId);
+            if (semiFinalistTeam == null)
+            {
+                return NotFound($"Team with ID {subChampionId} not found.");
+            }
+
+            season.Champion = championTeam;
+            season.ChampionWestId = championId;
+            season.SubChampion = semiFinalistTeam;
+            season.SubChampionId = subChampionId;
+
+            await _context.SaveChangesAsync();
+
+            return Ok($"Champion and SemiFinalist have been updated for Season {seasonId}.");
+        }
     }
 }
