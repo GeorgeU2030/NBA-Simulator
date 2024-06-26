@@ -39,7 +39,29 @@ namespace NBA_Simulator_project.Controllers {
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Team>>> GetTeams() {
-            return await _context.Teams.ToListAsync();
+            return await _context.Teams.OrderByDescending(t => t.Rings).ToListAsync();
+        }
+
+        [HttpGet("editions")]
+        public async Task<ActionResult<IEnumerable<object>>> GetTeamsWithChampionshipEditions() {
+            var teamsWithChampionshipEditions = await _context.Teams
+                .Where(team => team.Rings > 0)
+                .Select(team => new {
+                    Team = team,
+                    ChampionshipEditions = _context.Seasons
+                        .Where(season => season.ChampionId == team.TeamId)
+                        .Select(season => season.Edition)
+                        .OrderBy(edition => edition) 
+                        .ToList(),
+                    MostRecentEdition = _context.Seasons
+                        .Where(season => season.ChampionId == team.TeamId)
+                        .Max(season => season.Edition)
+                })
+                .OrderByDescending(teamWithChamps => teamWithChamps.Team.Rings)
+                .ThenByDescending(teamWithChamps => teamWithChamps.MostRecentEdition)
+                .ToListAsync();
+
+            return teamsWithChampionshipEditions;
         }
 
 

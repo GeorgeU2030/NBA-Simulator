@@ -35,7 +35,16 @@ namespace NBA_Simulator_project.Controllers {
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Season>>> GetSeasons() {
-            return await _context.Seasons.ToListAsync();
+            
+            var seasons = await _context.Seasons
+                .Include(s => s.Champion)
+                .Include(s => s.SubChampion)
+                .Include(s => s.SemiFinalistEast)
+                .Include(s => s.SemiFinalistWest)
+                .OrderByDescending(s => s.SeasonId)
+                .ToListAsync();
+
+            return seasons;
         }
 
         [HttpPost]
@@ -146,7 +155,7 @@ namespace NBA_Simulator_project.Controllers {
             }
 
             season.Champion = championTeam;
-            season.ChampionWestId = championId;
+            season.ChampionId = championId;
             season.SubChampion = semiFinalistTeam;
             season.SubChampionId = subChampionId;
 
